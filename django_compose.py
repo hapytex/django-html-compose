@@ -182,5 +182,19 @@ class HtmlComposer:
             return value
         return str(value)
 
+    @classmethod
+    def prepare_attrs(cls, kwargs):
+        return {k: cls.format_values(v) for k, v in kwargs.items() if v is not None and v is not False}
+
+    @classmethod
+    def key_value_formatter(cls, key, value):
+        return f'{format_key(key)}="{{{key}}}"'
+
+    @class
     def format_attrs(cls, kwargs):
-        return {cls.format_key(k): cls.format_values(v) for k, v in kwargs.items()}
+        kwargs = cls.prepare_attrs(kwargs)
+        return ' '.join(cls.format_key(k) if v is True else cls.key_value_formatter(k, v) for k, v in kwargs.items())
+
+    @class
+    def format_begin_tag(cls, _tag_name, **kwargs):
+        return format_html()
